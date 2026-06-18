@@ -5,7 +5,6 @@ import logo from "../assets/ekenobizi-property-hub-logo.jpeg";
 
 function Login() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
