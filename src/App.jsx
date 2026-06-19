@@ -1,61 +1,64 @@
-import { Routes, Route } from "react-router-dom";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Layout from "./components/layout/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
+// Temporary placeholders — to be replaced with real pages later
+function Home() {
+  return (
+    <div className="p-8 text-center text-gray-500">Homepage coming Day 11</div>
+  );
+}
 
 function Dashboard() {
   return (
-    <div className="min-h-screen bg-brand-green-deep flex items-center justify-center">
-      <h1 className="text-brand-gold text-3xl font-bold">
-        Owner Dashboard (Protected)
-      </h1>
+    <div className="p-8 text-center text-gray-500">
+      Owner Dashboard — coming soon
     </div>
   );
 }
 
 function AdminPanel() {
   return (
-    <div className="min-h-screen bg-brand-green-deep flex items-center justify-center">
-      <h1 className="text-brand-gold text-3xl font-bold">
-        Admin Panel (Admins Only)
-      </h1>
+    <div className="p-8 text-center text-gray-500">
+      Admin Panel — coming soon
     </div>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <div className="min-h-screen bg-brand-green-deep flex items-center justify-center">
-            <h1 className="text-brand-gold text-3xl font-bold">
-              Supabase Connected
-            </h1>
-          </div>
-        }
-      />
-      <Route path="/register" element={<Register />} />
+      {/* Public auth pages — no Navbar/Footer */}
       <Route path="/login" element={<Login />} />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute requireAdmin>
-            <AdminPanel />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/register" element={<Register />} />
+
+      {/* All other pages use the Layout shell */}
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requireAdmin>
+              <AdminPanel />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Catch-all — redirect unknown paths to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
     </Routes>
   );
 }
-
-export default App;
