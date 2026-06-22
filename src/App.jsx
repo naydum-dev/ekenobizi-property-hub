@@ -3,14 +3,9 @@ import Layout from "./components/layout/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Home from "./pages/Home";
 
 // Temporary placeholders — to be replaced with real pages later
-function Home() {
-  return (
-    <div className="p-8 text-center text-gray-500">Homepage coming Day 11</div>
-  );
-}
-
 function Dashboard() {
   return (
     <div className="p-8 text-center text-gray-500">
