@@ -4,6 +4,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import Listings from "./pages/Listings";
 
 // Temporary placeholders — to be replaced with real pages later
 function Dashboard() {
@@ -32,6 +33,7 @@ export default function App() {
       {/* All other pages use the Layout shell */}
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/listings" element={<Listings />} />
 
         <Route
           path="/dashboard"

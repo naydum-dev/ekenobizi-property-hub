@@ -6,7 +6,14 @@ const CATEGORIES = [
   { value: "shop_for_rent", label: "Shop for Rent" },
 ];
 
-export default function ListingsFilter({ villages, filters, onChange }) {
+export default function ListingsFilter({
+  villages,
+  filters,
+  onChange,
+  onClearSearch,
+}) {
+  const hasActiveFilter = filters.category || filters.village || filters.search;
+
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 mb-8 flex flex-col sm:flex-row gap-4">
       {/* Category filter */}
@@ -36,10 +43,13 @@ export default function ListingsFilter({ villages, filters, onChange }) {
         ))}
       </select>
 
-      {/* Clear filters */}
-      {(filters.category || filters.village) && (
+      {/* Clear all */}
+      {hasActiveFilter && (
         <button
-          onClick={() => onChange({ category: "", village: "" })}
+          onClick={() => {
+            onChange({ category: "", village: "", search: "" });
+            onClearSearch();
+          }}
           className="text-sm text-brand-earth underline hover:text-brand-green-deep transition-colors"
         >
           Clear filters
