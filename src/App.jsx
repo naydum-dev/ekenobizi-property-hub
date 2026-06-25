@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Listings from "./pages/Listings";
+import ListingDetail from "./pages/ListingDetail";
 
 // Temporary placeholders — to be replaced with real pages later
 function Dashboard() {
@@ -34,6 +35,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/listings" element={<Listings />} />
+        <Route path="/listings/:id" element={<ListingDetail />} />
 
         <Route
           path="/dashboard"

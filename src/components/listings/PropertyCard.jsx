@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const CATEGORY_LABELS = {
   land_for_sale: "Land for Sale",
   house_for_sale: "House for Sale",
@@ -6,8 +8,15 @@ const CATEGORY_LABELS = {
 };
 
 export default function PropertyCard({ property }) {
-  const { title, category, price, whatsapp_number, villages, property_images } =
-    property;
+  const {
+    id,
+    title,
+    category,
+    price,
+    whatsapp_number,
+    villages,
+    property_images,
+  } = property;
 
   const primaryImage =
     property_images?.find((img) => img.is_primary) || property_images?.[0];
@@ -15,20 +24,22 @@ export default function PropertyCard({ property }) {
 
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
-      {/* Image */}
-      <div className="h-48 bg-gray-100 overflow-hidden">
-        {primaryImage ? (
-          <img
-            src={primaryImage.storage_path}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-            No image
-          </div>
-        )}
-      </div>
+      {/* Image — clicking goes to detail page */}
+      <Link to={`/listings/${id}`}>
+        <div className="h-48 bg-gray-100 overflow-hidden">
+          {primaryImage ? (
+            <img
+              src={primaryImage.storage_path}
+              alt={title}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+              No image
+            </div>
+          )}
+        </div>
+      </Link>
 
       {/* Content */}
       <div className="p-4 space-y-2">
@@ -37,10 +48,12 @@ export default function PropertyCard({ property }) {
           {categoryLabel}
         </span>
 
-        {/* Title */}
-        <h3 className="text-brand-green-deep font-semibold text-base leading-snug">
-          {title}
-        </h3>
+        {/* Title — also links to detail page */}
+        <Link to={`/listings/${id}`}>
+          <h3 className="text-brand-green-deep font-semibold text-base leading-snug hover:underline">
+            {title}
+          </h3>
+        </Link>
 
         {/* Village */}
         <p className="text-gray-500 text-sm">{villages?.name || "Ekenobizi"}</p>
