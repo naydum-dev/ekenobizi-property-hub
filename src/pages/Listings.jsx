@@ -16,7 +16,6 @@ export default function Listings() {
   });
   const [searchInput, setSearchInput] = useState("");
 
-  // Debounce: sync searchInput into filters.search after 400ms
   useEffect(() => {
     const timer = setTimeout(() => {
       setFilters((prev) => ({ ...prev, search: searchInput }));
@@ -24,7 +23,6 @@ export default function Listings() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  // Fetch villages once on mount
   useEffect(() => {
     async function fetchVillages() {
       const { data } = await supabase
@@ -36,7 +34,6 @@ export default function Listings() {
     fetchVillages();
   }, []);
 
-  // Fetch listings whenever filters change
   useEffect(() => {
     async function fetchListings() {
       setLoading(true);
@@ -85,23 +82,29 @@ export default function Listings() {
       {/* Listings Grid */}
       <div className="max-w-6xl mx-auto px-4 py-10">
         {/* Search input */}
-        <div className="mb-4">
+        <div className="mb-6">
+          <label htmlFor="listing-search" className="sr-only">
+            Search listings
+          </label>
           <input
-            type="text"
+            id="listing-search"
+            type="search"
             placeholder="Search listings by title..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green"
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green placeholder-gray-400"
           />
         </div>
 
         {/* Filter bar */}
-        <ListingsFilter
-          villages={villages}
-          filters={filters}
-          onChange={setFilters}
-          onClearSearch={() => setSearchInput("")}
-        />
+        <div className="mb-8">
+          <ListingsFilter
+            villages={villages}
+            filters={filters}
+            onChange={setFilters}
+            onClearSearch={() => setSearchInput("")}
+          />
+        </div>
 
         {/* Error state */}
         {error && <div className="text-center text-red-600 py-12">{error}</div>}
@@ -118,20 +121,30 @@ export default function Listings() {
         {/* Empty state */}
         {!loading && !error && properties.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-gray-500 text-lg">No listings found.</p>
-            <p className="text-gray-400 text-sm mt-2">
-              Try a different search term or clear your filters.
+            <p className="text-2xl mb-3">🏡</p>
+            <p className="text-gray-600 font-semibold text-lg">
+              No listings found
+            </p>
+            <p className="text-gray-400 text-sm mt-2 max-w-xs mx-auto">
+              Try a different search term or clear your filters to see all
+              available properties.
             </p>
           </div>
         )}
 
-        {/* Property grid */}
+        {/* Results count + grid */}
         {!loading && !error && properties.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </div>
+          <>
+            <p className="text-sm text-gray-500 mb-4">
+              {properties.length}{" "}
+              {properties.length === 1 ? "listing" : "listings"} found
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {properties.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>

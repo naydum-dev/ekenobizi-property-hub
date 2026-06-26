@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import VerifiedBadge from "../components/ui/VerifiedBadge";
 
 function formatPrice(price) {
   if (!price) return "Price on request";
@@ -46,7 +47,6 @@ export default function ListingDetail() {
         setError("Property not found.");
       } else {
         setProperty(data);
-        // Set primary image as selected, fallback to first image
         const primary = data.property_images?.find((img) => img.is_primary);
         const first = data.property_images?.[0];
         setSelectedImage(primary || first || null);
@@ -94,12 +94,11 @@ export default function ListingDetail() {
 
       {/* Image Gallery */}
       <div className="mb-8">
-        {/* Main image */}
         <div className="w-full h-72 md:h-96 rounded-xl overflow-hidden bg-gray-100 mb-3">
           {selectedImage ? (
             <img
               src={selectedImage.storage_path}
-              alt={property.title}
+              alt={`Photo of ${property.title}`}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -109,13 +108,13 @@ export default function ListingDetail() {
           )}
         </div>
 
-        {/* Thumbnails — only shown when there are multiple images */}
         {images.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto">
-            {images.map((img) => (
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {images.map((img, index) => (
               <button
                 key={img.id}
                 onClick={() => setSelectedImage(img)}
+                aria-label={`View image ${index + 1} of ${images.length}`}
                 className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
                   selectedImage?.id === img.id
                     ? "border-brand-gold"
@@ -124,7 +123,7 @@ export default function ListingDetail() {
               >
                 <img
                   src={img.storage_path}
-                  alt="thumbnail"
+                  alt={`Property image ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
               </button>
@@ -137,16 +136,12 @@ export default function ListingDetail() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left — main details */}
         <div className="md:col-span-2 space-y-5">
-          {/* Category badge + verification badge */}
+          {/* Badges */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="bg-brand-gold text-white text-xs font-semibold px-3 py-1 rounded-full">
               {formatCategory(property.category)}
             </span>
-            {property.is_verified && (
-              <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
-                ✓ Verified
-              </span>
-            )}
+            {property.is_verified && <VerifiedBadge size="sm" />}
           </div>
 
           {/* Title */}
@@ -190,13 +185,15 @@ export default function ListingDetail() {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+              aria-label={`Contact seller on WhatsApp about ${property.title}`}
+              className="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 className="w-5 h-5"
+                aria-hidden="true"
               >
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
                 <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.528 5.845L.057 23.571a.75.75 0 0 0 .921.921l5.726-1.471A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.7-.498-5.254-1.37l-.372-.214-3.853.99.99-3.853-.214-.372A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
@@ -205,7 +202,7 @@ export default function ListingDetail() {
             </a>
 
             {/* Trust note */}
-            <p className="text-xs text-gray-400 text-center">
+            <p className="text-xs text-gray-400 text-center leading-relaxed">
               This listing has been reviewed by the Ekenobizi Property Hub team.
             </p>
           </div>
