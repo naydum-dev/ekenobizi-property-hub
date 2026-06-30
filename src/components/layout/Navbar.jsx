@@ -63,7 +63,7 @@ export default function Navbar() {
           {user && (
             <>
               <Link
-                to="/dashboard"
+                to="/owner"
                 className="hover:text-brand-gold transition-colors"
               >
                 Dashboard
@@ -144,7 +144,7 @@ export default function Navbar() {
           {user && (
             <>
               <Link
-                to="/dashboard"
+                to="/owner"
                 onClick={() => setMenuOpen(false)}
                 className="hover:text-brand-gold"
               >
