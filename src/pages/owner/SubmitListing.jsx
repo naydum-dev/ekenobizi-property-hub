@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
+import ImageUpload from "../../components/owner/ImageUpload";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const CATEGORIES = [
   { value: "land_for_sale", label: "Land for Sale" },
@@ -20,6 +23,10 @@ const SubmitListing = () => {
 
   const [errors, setErrors] = useState({});
   const [villages, setVillages] = useState([]);
+  const [images, setImages] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +73,27 @@ const SubmitListing = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const uploadImage = async (file, propertyId) => {
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `${propertyId}/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("property-images")
+      .upload(filePath, file);
+
+    if (uploadError) {
+      throw new Error(`Image upload failed: ${uploadError.message}`);
+    }
+
+    const { data } = supabase.storage
+      .from("property-images")
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validate();
 
@@ -74,8 +101,62 @@ const SubmitListing = () => {
       return;
     }
 
-    console.log("Form is valid. Data:", formData);
-    // Supabase insert comes in a later step, after image upload is built
+    if (images.length === 0) {
+      setErrors((prev) => ({
+        ...prev,
+        images: "Please add at least one image",
+      }));
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      // 1. Insert the property row first
+      const { data: property, error: propertyError } = await supabase
+        .from("properties")
+        .insert({
+          owner_id: user.id,
+          title: formData.title.trim(),
+          description: formData.description.trim() || null,
+          category: formData.category,
+          village_id: formData.village_id,
+          price: formData.price.trim() ? Number(formData.price) : null,
+          whatsapp_number: formData.whatsapp_number.trim(),
+        })
+        .select()
+        .single();
+
+      if (propertyError) {
+        throw new Error(`Could not create listing: ${propertyError.message}`);
+      }
+
+      // 2. Upload each image, then insert its row into property_images
+      for (const img of images) {
+        const publicUrl = await uploadImage(img.file, property.id);
+
+        const { error: imageRowError } = await supabase
+          .from("property_images")
+          .insert({
+            property_id: property.id,
+            storage_path: publicUrl,
+            is_primary: img.isPrimary || false,
+          });
+
+        if (imageRowError) {
+          throw new Error(`Could not save image: ${imageRowError.message}`);
+        }
+      }
+
+      // 3. Success — reset and redirect
+      alert("Listing submitted! It will go live after admin review.");
+      navigate("/owner");
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -258,12 +339,20 @@ const SubmitListing = () => {
           )}
         </div>
 
+        {/* Images */}
+        <ImageUpload
+          images={images}
+          setImages={setImages}
+          error={errors.images}
+        />
+
         {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-brand-green text-white font-semibold py-3 rounded-lg hover:bg-brand-green-deep transition-colors"
+          disabled={submitting}
+          className="w-full bg-brand-green text-white font-semibold py-3 rounded-lg hover:bg-brand-green-deep transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Submit Listing
+          {submitting ? "Submitting..." : "Submit Listing"}
         </button>
       </form>
     </div>
