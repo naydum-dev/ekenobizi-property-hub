@@ -9,16 +9,9 @@ import Listings from "./pages/Listings";
 import ListingDetail from "./pages/ListingDetail";
 import MyListings from "./pages/owner/MyListings";
 import SubmitListing from "./pages/owner/SubmitListing";
+import EditListing from "./pages/owner/EditListing";
 import OwnerProfile from "./pages/owner/OwnerProfile";
-
-// Temporary placeholder — to be replaced with real page later
-function AdminPanel() {
-  return (
-    <div className="p-8 text-center text-gray-500">
-      Admin Panel — coming soon
-    </div>
-  );
-}
+import AdminPanel from "./pages/AdminPanel";
 
 export default function App() {
   return (
@@ -38,6 +31,7 @@ export default function App() {
       >
         <Route index element={<MyListings />} />
         <Route path="submit" element={<SubmitListing />} />
+        <Route path="edit/:id" element={<EditListing />} />
         <Route path="profile" element={<OwnerProfile />} />
       </Route>
 
