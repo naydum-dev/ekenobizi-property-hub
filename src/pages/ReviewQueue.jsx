@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 
 function formatCategory(category) {
@@ -20,7 +21,7 @@ function formatPrice(price) {
   }).format(price);
 }
 
-export default function AdminPanel() {
+export default function ReviewQueue() {
   const [pendingListings, setPendingListings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -111,7 +112,12 @@ export default function AdminPanel() {
             <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900">
-                  {property.title}
+                  <Link
+                    to={`/admin/listings/${property.id}`}
+                    className="hover:underline hover:text-brand-green-deep"
+                  >
+                    {property.title}
+                  </Link>
                 </h2>
                 <p className="text-sm text-gray-500">
                   {formatCategory(property.category)} ·{" "}

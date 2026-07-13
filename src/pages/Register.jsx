@@ -15,6 +15,7 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [confirmationSent, setConfirmationSent] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -41,9 +42,14 @@ function Register() {
 
     setLoading(true);
 
-    const { data, error: signUpError } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
+      options: {
+        data: {
+          full_name: formData.fullName,
+        },
+      },
     });
 
     if (signUpError) {
@@ -52,21 +58,33 @@ function Register() {
       return;
     }
 
-    const userId = data.user.id;
-
-    const { error: profileError } = await supabase.from("profiles").insert({
-      id: userId,
-      full_name: formData.fullName,
-    });
-
-    if (profileError) {
-      setError(profileError.message);
-      setLoading(false);
-      return;
-    }
+    // The `profiles` row is now created automatically by a database trigger
+    // (see handle_new_user()) — no client-side insert needed, and no session
+    // is required for it to succeed, since it runs server-side.
 
     setLoading(false);
-    navigate("/login");
+    setConfirmationSent(true);
+  }
+
+  if (confirmationSent) {
+    return (
+      <div className="min-h-screen bg-brand-green-deep flex items-center justify-center px-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 text-center">
+          <img
+            src={logo}
+            alt="Ekenobizi Property Hub"
+            className="w-20 h-20 mx-auto mb-4 rounded-lg object-contain"
+          />
+          <h1 className="text-brand-green-deep text-2xl font-bold mb-2">
+            Check your email
+          </h1>
+          <p className="text-brand-earth text-sm">
+            We've sent a confirmation link to <strong>{formData.email}</strong>.
+            Please confirm your email before logging in.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
