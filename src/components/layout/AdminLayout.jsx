@@ -1,23 +1,27 @@
 import { NavLink, Outlet } from "react-router-dom";
 import StatsBar from "../admin/StatsBar";
+import { usePendingCount } from "../../hooks/usePendingCount";
 
 const navItems = [
-  { to: "/admin", label: "Review Queue", end: true },
+  { to: "/admin", label: "Review Queue", end: true, showBadge: true },
   { to: "/admin/listings", label: "All Listings" },
   { to: "/admin/owners", label: "Owners" },
+  { to: "/admin/activity", label: "Activity" },
   { to: "/admin/settings", label: "Settings" },
 ];
 
 function AdminLayout() {
+  const { count: pendingCount } = usePendingCount();
+
   const linkClasses = ({ isActive }) =>
-    `block px-4 py-3 rounded-lg font-medium transition-colors ${
+    `flex items-center justify-between px-4 py-3 rounded-lg font-medium transition-colors ${
       isActive
         ? "bg-brand-green-deep text-white"
         : "text-brand-earth hover:bg-brand-green-deep/10"
     }`;
 
   const mobileLinkClasses = ({ isActive }) =>
-    `flex-1 text-center py-3 text-sm font-medium ${
+    `relative flex-1 text-center py-3 text-sm font-medium ${
       isActive ? "text-brand-green-deep" : "text-gray-500"
     }`;
 
@@ -34,7 +38,15 @@ function AdminLayout() {
               end={item.end}
               className={linkClasses}
             >
-              {item.label}
+              <span>{item.label}</span>
+              {item.showBadge && pendingCount > 0 && (
+                <span
+                  className="ml-2 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full bg-brand-gold text-white text-xs font-semibold"
+                  aria-label={`${pendingCount} pending listings`}
+                >
+                  {pendingCount}
+                </span>
+              )}
             </NavLink>
           ))}
         </nav>
@@ -61,6 +73,14 @@ function AdminLayout() {
             className={mobileLinkClasses}
           >
             {item.label}
+            {item.showBadge && pendingCount > 0 && (
+              <span
+                className="absolute top-1 right-1/4 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-brand-gold text-white text-[10px] font-semibold flex items-center justify-center"
+                aria-label={`${pendingCount} pending listings`}
+              >
+                {pendingCount}
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>

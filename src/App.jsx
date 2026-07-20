@@ -17,6 +17,7 @@ import AllListings from "./pages/admin/AllListings";
 import ListingDetailAdmin from "./pages/admin/ListingDetailAdmin";
 import Owners from "./pages/admin/Owners";
 import Settings from "./pages/admin/Settings";
+import ActivityLog from "./pages/admin/ActivityLog";
 
 export default function App() {
   return (
@@ -53,6 +54,7 @@ export default function App() {
         <Route path="listings" element={<AllListings />} />
         <Route path="listings/:id" element={<ListingDetailAdmin />} />
         <Route path="owners" element={<Owners />} />
+        <Route path="activity" element={<ActivityLog />} />
         <Route path="settings" element={<Settings />} />
       </Route>
 

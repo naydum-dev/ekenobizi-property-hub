@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import VerifiedBadge from "../components/ui/VerifiedBadge";
+import ListingDetailSkeleton from "./ListingDetailSkeleton";
 
 function formatPrice(price) {
   if (!price) return "Price on request";
@@ -58,11 +59,7 @@ export default function ListingDetail() {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
-        Loading property...
-      </div>
-    );
+    return <ListingDetailSkeleton />;
   }
 
   if (error) {

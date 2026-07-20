@@ -9,8 +9,13 @@ function ProtectedRoute({ children, requireAdmin = false }) {
   // for a split second on every page refresh, before their session loads.
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-green-deep">
-        <p className="text-white font-semibold">Loading...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3 bg-brand-green-deep">
+        <div
+          className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin"
+          role="status"
+          aria-label="Checking your session"
+        />
+        <p className="text-white/80 text-sm font-medium">Loading...</p>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
+import { logAction } from "../../utils/auditLog";
 import VerifiedBadge from "../../components/ui/VerifiedBadge";
 
 export default function AllListings() {
@@ -59,6 +60,8 @@ export default function AllListings() {
 
     // update local state directly rather than re-fetching
     setListings((prev) => prev.filter((listing) => listing.id !== id));
+
+    logAction("delete", id);
   }
 
   const sortedListings = useMemo(() => {

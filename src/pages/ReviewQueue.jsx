@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { logAction } from "../utils/auditLog";
 
 function formatCategory(category) {
   const labels = {
@@ -79,6 +80,8 @@ export default function ReviewQueue() {
     }
 
     setPendingListings((prev) => prev.filter((p) => p.id !== propertyId));
+
+    logAction(newStatus === "active" ? "approve" : "reject", propertyId);
   }
 
   if (loading) {

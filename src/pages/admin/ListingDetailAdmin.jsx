@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
+import { logAction } from "../../utils/auditLog";
 
 const CATEGORY_OPTIONS = [
   { value: "land_for_sale", label: "Land for Sale" },
@@ -149,6 +150,8 @@ export default function ListingDetailAdmin() {
     }
 
     fetchProperty();
+
+    logAction(newStatus === "active" ? "approve" : "reject", id);
   }
 
   async function handleSave() {
