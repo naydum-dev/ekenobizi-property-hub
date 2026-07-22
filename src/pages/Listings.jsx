@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import PropertyCard from "../components/listings/PropertyCard";
 import PropertyCardSkeleton from "../components/ui/PropertyCardSkeleton";
 import ListingsFilter from "../components/listings/ListingsFilter";
+import ErrorMessage from "../components/ui/ErrorMessage";
+import EmptyState from "../components/ui/EmptyState";
 
 export default function Listings() {
   const [properties, setProperties] = useState([]);
@@ -34,40 +36,40 @@ export default function Listings() {
     fetchVillages();
   }, []);
 
-  useEffect(() => {
-    async function fetchListings() {
-      setLoading(true);
-      setError(null);
+  const fetchListings = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-      let query = supabase
-        .from("properties")
-        .select(
-          `
-          *,
-          villages ( name ),
-          property_images ( storage_path, is_primary )
-        `,
-        )
-        .eq("status", "active")
-        .order("created_at", { ascending: false });
+    let query = supabase
+      .from("properties")
+      .select(
+        `
+        *,
+        villages ( name ),
+        property_images ( storage_path, is_primary )
+      `,
+      )
+      .eq("status", "active")
+      .order("created_at", { ascending: false });
 
-      if (filters.category) query = query.eq("category", filters.category);
-      if (filters.village) query = query.eq("village_id", filters.village);
-      if (filters.search) query = query.ilike("title", `%${filters.search}%`);
+    if (filters.category) query = query.eq("category", filters.category);
+    if (filters.village) query = query.eq("village_id", filters.village);
+    if (filters.search) query = query.ilike("title", `%${filters.search}%`);
 
-      const { data, error } = await query;
+    const { data, error } = await query;
 
-      if (error) {
-        setError("Failed to load listings. Please try again.");
-      } else {
-        setProperties(data);
-      }
-
-      setLoading(false);
+    if (error) {
+      setError("Failed to load listings. Please try again.");
+    } else {
+      setProperties(data);
     }
 
-    fetchListings();
+    setLoading(false);
   }, [filters]);
+
+  useEffect(() => {
+    fetchListings();
+  }, [fetchListings]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -107,10 +109,10 @@ export default function Listings() {
         </div>
 
         {/* Error state */}
-        {error && <div className="text-center text-red-600 py-12">{error}</div>}
+        {error && <ErrorMessage message={error} onRetry={fetchListings} />}
 
         {/* Skeleton loaders */}
-        {loading && (
+        {!error && loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <PropertyCardSkeleton key={i} />
@@ -120,16 +122,26 @@ export default function Listings() {
 
         {/* Empty state */}
         {!loading && !error && properties.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-2xl mb-3">🏡</p>
-            <p className="text-gray-600 font-semibold text-lg">
-              No listings found
-            </p>
-            <p className="text-gray-400 text-sm mt-2 max-w-xs mx-auto">
-              Try a different search term or clear your filters to see all
-              available properties.
-            </p>
-          </div>
+          <>
+            {filters.category || filters.village || filters.search ? (
+              <EmptyState
+                icon="🔍"
+                title="No listings match your filters"
+                message="Try a different search term or clear your filters to see all available properties."
+                ctaLabel="Clear Filters"
+                onCtaClick={() => {
+                  setSearchInput("");
+                  setFilters({ category: "", village: "", search: "" });
+                }}
+              />
+            ) : (
+              <EmptyState
+                icon="🏡"
+                title="No listings yet"
+                message="New verified properties are added regularly — check back soon."
+              />
+            )}
+          </>
         )}
 
         {/* Results count + grid */}

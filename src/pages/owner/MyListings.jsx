@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../context/AuthContext";
+import ErrorMessage from "../../components/ui/ErrorMessage";
+import EmptyState from "../../components/ui/EmptyState";
 
 function formatCategory(category) {
   const labels = {
@@ -47,15 +49,12 @@ export default function MyListings() {
   const { user } = useAuth();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (user) {
-      fetchMyListings();
-    }
-  }, [user]);
-
-  async function fetchMyListings() {
+  const fetchMyListings = useCallback(async () => {
+    if (!user) return;
     setLoading(true);
+    setError(null);
 
     const { data, error } = await supabase
       .from("properties")
@@ -70,14 +69,18 @@ export default function MyListings() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Error fetching my listings:", error);
+      setError("Failed to load your listings. Please try again.");
       setLoading(false);
       return;
     }
 
     setListings(data);
     setLoading(false);
-  }
+  }, [user]);
+
+  useEffect(() => {
+    fetchMyListings();
+  }, [fetchMyListings]);
 
   async function handleDelete(propertyId) {
     const confirmed = window.confirm(
@@ -118,18 +121,24 @@ export default function MyListings() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="p-6">
+        <ErrorMessage message={error} onRetry={fetchMyListings} />
+      </div>
+    );
+  }
+
   if (listings.length === 0) {
     return (
-      <div className="p-6 text-center">
-        <p className="text-gray-500 mb-4">
-          You haven't submitted any listings yet.
-        </p>
-        <Link
-          to="/owner/submit"
-          className="inline-block px-4 py-2 bg-brand-green text-white rounded-md hover:bg-brand-green-deep transition"
-        >
-          Submit a Listing
-        </Link>
+      <div className="p-6">
+        <EmptyState
+          icon="🏘️"
+          title="You haven't listed a property yet"
+          message="Submit your first property and our team will review it before it goes live."
+          ctaLabel="Submit a Listing"
+          ctaTo="/owner/submit"
+        />
       </div>
     );
   }
