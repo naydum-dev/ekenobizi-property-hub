@@ -1,29 +1,38 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import {
+  FaMapMarkedAlt,
+  FaHome,
+  FaKey,
+  FaStore,
+  FaShieldAlt,
+  FaMapMarkerAlt,
+  FaCheckCircle,
+} from "react-icons/fa";
 
 const categories = [
   {
     title: "Land for Sale",
     description: "Plots and parcels across Ekenobizi villages.",
-    icon: "🌿",
+    icon: FaMapMarkedAlt,
     href: "/listings",
   },
   {
     title: "House for Sale",
     description: "Family homes and residential properties.",
-    icon: "🏡",
+    icon: FaHome,
     href: "/listings",
   },
   {
     title: "House for Rent",
     description: "Affordable rentals within the community.",
-    icon: "🏠",
+    icon: FaKey,
     href: "/listings",
   },
   {
     title: "Shop for Rent",
     description: "Commercial spaces for trade and business.",
-    icon: "🏪",
+    icon: FaStore,
     href: "/listings",
   },
 ];
@@ -51,19 +60,19 @@ const steps = [
 
 const trustPoints = [
   {
-    icon: "🛡️",
+    icon: FaShieldAlt,
     title: "Every Listing is Reviewed",
     description:
       "No listing goes live without passing through our admin review process. What you see has been checked.",
   },
   {
-    icon: "📍",
+    icon: FaMapMarkerAlt,
     title: "Built for This Community",
     description:
       "We serve Ekenobizi and Ekenobizi alone. This is not a generic portal — it is your community platform.",
   },
   {
-    icon: "✅",
+    icon: FaCheckCircle,
     title: "Verified Badge",
     description:
       "Listings that have been physically confirmed carry a Verified badge. Look for it before you contact an owner.",
@@ -124,19 +133,24 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((cat) => (
-              <Link
-                key={cat.title}
-                to={cat.href}
-                className="group border border-gray-200 rounded-xl p-6 text-center hover:border-brand-green hover:shadow-md transition"
-              >
-                <div className="text-4xl mb-4">{cat.icon}</div>
-                <h3 className="text-lg font-semibold text-brand-green-deep mb-2 group-hover:text-brand-green transition">
-                  {cat.title}
-                </h3>
-                <p className="text-gray-500 text-sm">{cat.description}</p>
-              </Link>
-            ))}
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <Link
+                  key={cat.title}
+                  to={cat.href}
+                  className="group border border-gray-200 rounded-xl p-6 text-center hover:border-brand-green hover:shadow-md transition"
+                >
+                  <div className="flex justify-center mb-4">
+                    <Icon className="text-4xl text-brand-green" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-brand-green-deep mb-2 group-hover:text-brand-green transition">
+                    {cat.title}
+                  </h3>
+                  <p className="text-gray-500 text-sm">{cat.description}</p>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -185,20 +199,25 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {trustPoints.map((point) => (
-              <div
-                key={point.title}
-                className="bg-white/10 rounded-xl p-6 text-center"
-              >
-                <div className="text-4xl mb-4">{point.icon}</div>
-                <h3 className="text-lg font-semibold text-brand-gold mb-3">
-                  {point.title}
-                </h3>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  {point.description}
-                </p>
-              </div>
-            ))}
+            {trustPoints.map((point) => {
+              const Icon = point.icon;
+              return (
+                <div
+                  key={point.title}
+                  className="bg-white/10 rounded-xl p-6 text-center"
+                >
+                  <div className="flex justify-center mb-4">
+                    <Icon className="text-4xl text-brand-gold" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-brand-gold mb-3">
+                    {point.title}
+                  </h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    {point.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

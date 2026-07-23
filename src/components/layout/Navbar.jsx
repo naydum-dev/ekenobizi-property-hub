@@ -24,10 +24,13 @@ export default function Navbar() {
             alt="EPH Logo"
             className="h-10 w-15 rounded-lg object-cover"
           />
-          <span className="text-brand-gold font-semibold text-base leading-tight hidden sm:block">
-            Ekenobizi
-            <br />
-            Property Hub
+          <span className="text-brand-gold font-semibold leading-tight">
+            <span className="block sm:hidden text-lg">EPH</span>
+            <span className="hidden sm:block text-base">
+              Ekenobizi
+              <br />
+              Property Hub
+            </span>
           </span>
         </Link>
 
