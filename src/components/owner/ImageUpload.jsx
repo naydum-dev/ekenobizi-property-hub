@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { resizeImage } from "../../utils/imageResize";
 
 const MAX_IMAGES = 6;
 const MAX_FILE_SIZE_MB = 5;
@@ -6,6 +7,7 @@ const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export default function ImageUpload({ images, setImages, error }) {
   const inputRef = useRef(null);
+  const [processing, setProcessing] = useState(false);
 
   function validateFile(file) {
     if (!ACCEPTED_TYPES.includes(file.type)) {
@@ -17,7 +19,7 @@ export default function ImageUpload({ images, setImages, error }) {
     return null;
   }
 
-  function handleFilesSelected(e) {
+  async function handleFilesSelected(e) {
     const selected = Array.from(e.target.files);
     e.target.value = ""; // allow re-selecting the same file later
 
@@ -26,6 +28,8 @@ export default function ImageUpload({ images, setImages, error }) {
       return;
     }
 
+    setProcessing(true);
+
     const validFiles = [];
     for (const file of selected) {
       const err = validateFile(file);
@@ -33,12 +37,25 @@ export default function ImageUpload({ images, setImages, error }) {
         alert(err);
         continue;
       }
+
+      let processedFile = file;
+      try {
+        // Resize/compress before it ever touches Storage — caps at 1200px, ~0.8 quality JPEG
+        processedFile = await resizeImage(file, 1200, 0.8);
+      } catch {
+        // If resizing fails for any reason, fall back to the original file
+        // rather than blocking the owner's upload entirely
+        processedFile = file;
+      }
+
       validFiles.push({
-        file,
-        preview: URL.createObjectURL(file),
+        file: processedFile,
+        preview: URL.createObjectURL(processedFile),
         id: crypto.randomUUID(),
       });
     }
+
+    setProcessing(false);
 
     setImages((prev) => {
       const updated = [...prev, ...validFiles];
@@ -81,7 +98,9 @@ export default function ImageUpload({ images, setImages, error }) {
         onClick={() => inputRef.current?.click()}
         className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-brand-green transition-colors"
       >
-        <p className="text-gray-600">Click to select images</p>
+        <p className="text-gray-600">
+          {processing ? "Processing images..." : "Click to select images"}
+        </p>
         <p className="text-sm text-gray-400 mt-1">
           JPG, PNG, or WEBP · up to {MAX_FILE_SIZE_MB}MB each · max {MAX_IMAGES}{" "}
           images
@@ -92,6 +111,7 @@ export default function ImageUpload({ images, setImages, error }) {
           accept={ACCEPTED_TYPES.join(",")}
           multiple
           onChange={handleFilesSelected}
+          disabled={processing}
           className="hidden"
         />
       </div>

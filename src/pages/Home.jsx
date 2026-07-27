@@ -9,6 +9,7 @@ import {
   FaMapMarkerAlt,
   FaCheckCircle,
 } from "react-icons/fa";
+import SEO from "../components/SEO";
 
 const categories = [
   {
@@ -82,6 +83,11 @@ const trustPoints = [
 const Home = () => {
   return (
     <main>
+      <SEO
+        title="Verified Property Listings in Ekenobizi"
+        description="Find land, houses, and shops for sale or rent in Ekenobizi Community, Umuahia South LGA. Every listing reviewed by a human admin before it goes live."
+      />
+
       {/* ── HERO ── */}
       <section className="bg-brand-green-deep text-white">
         <div className="max-w-4xl mx-auto px-6 py-24 text-center">

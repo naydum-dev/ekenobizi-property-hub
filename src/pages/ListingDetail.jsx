@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import VerifiedBadge from "../components/ui/VerifiedBadge";
 import ListingDetailSkeleton from "./ListingDetailSkeleton";
+import SEO from "../components/SEO";
 
 function formatPrice(price) {
   if (!price) return "Price on request";
@@ -79,8 +80,18 @@ export default function ListingDetail() {
   );
   const whatsappUrl = `https://wa.me/${property.whatsapp_number}?text=${whatsappMessage}`;
 
+  const seoDescription = property.description
+    ? property.description.slice(0, 155)
+    : `${formatCategory(property.category)} in ${property.villages?.name || "Ekenobizi"} — ${formatPrice(property.price)}. Reviewed and verified by Ekenobizi Property Hub.`;
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      <SEO
+        title={property.title}
+        description={seoDescription}
+        image={selectedImage?.storage_path}
+      />
+
       {/* Back link */}
       <Link
         to="/listings"
@@ -96,6 +107,11 @@ export default function ListingDetail() {
             <img
               src={selectedImage.storage_path}
               alt={`Photo of ${property.title}`}
+              // Eager-loaded on purpose: this is the largest visible element on
+              // page load (the LCP candidate) — lazy-loading it would delay,
+              // not help, perceived load time.
+              loading="eager"
+              decoding="async"
               className="w-full h-full object-cover"
             />
           ) : (
@@ -121,6 +137,8 @@ export default function ListingDetail() {
                 <img
                   src={img.storage_path}
                   alt={`Property image ${index + 1}`}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               </button>
