@@ -10,6 +10,7 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 import SEO from "../components/SEO";
+import { useAuth } from "../context/AuthContext";
 
 const categories = [
   {
@@ -81,6 +82,8 @@ const trustPoints = [
 ];
 
 const Home = () => {
+  const { user } = useAuth();
+  const listPropertyLink = user ? "/owner/submit" : "/register";
   return (
     <main>
       <SEO
@@ -113,7 +116,7 @@ const Home = () => {
               Browse Listings
             </Link>
             <Link
-              to="/register"
+              to={listPropertyLink}
               className="border border-white text-white font-semibold px-8 py-3 rounded-lg hover:bg-white hover:text-brand-green-deep transition"
             >
               List Your Property
@@ -247,7 +250,7 @@ const Home = () => {
               Browse Listings
             </Link>
             <Link
-              to="/register"
+              to={listPropertyLink}
               className="border border-brand-green-deep text-brand-green-deep font-semibold px-8 py-3 rounded-lg hover:bg-brand-green-deep hover:text-white transition"
             >
               List Your Property

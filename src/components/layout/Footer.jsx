@@ -1,4 +1,15 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+
 export default function Footer() {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <footer className="bg-brand-green-deep text-white">
       <div className="max-w-6xl mx-auto px-4 py-10">
@@ -15,27 +26,39 @@ export default function Footer() {
 
           {/* Links */}
           <div className="flex flex-col gap-2 text-sm text-white/80">
-            <a href="/" className="hover:text-brand-gold transition-colors">
+            <Link to="/" className="hover:text-brand-gold transition-colors">
               Home
-            </a>
-            <a
-              href="/listings"
+            </Link>
+            <Link
+              to="/listings"
               className="hover:text-brand-gold transition-colors"
             >
               Browse Listings
-            </a>
-            <a
-              href="/register"
-              className="hover:text-brand-gold transition-colors"
-            >
-              Create Account
-            </a>
-            <a
-              href="/login"
-              className="hover:text-brand-gold transition-colors"
-            >
-              Sign In
-            </a>
+            </Link>
+
+            {user ? (
+              <button
+                onClick={handleSignOut}
+                className="text-left hover:text-brand-gold transition-colors"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/register"
+                  className="hover:text-brand-gold transition-colors"
+                >
+                  Create Account
+                </Link>
+                <Link
+                  to="/login"
+                  className="hover:text-brand-gold transition-colors"
+                >
+                  Sign In
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Community note */}
