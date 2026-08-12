@@ -15,7 +15,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-brand-green-deep text-white shadow-md">
+    <nav className="bg-white text-brand-green-deep shadow-md">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo + Brand */}
         <Link to="/" className="flex items-center gap-3">
@@ -24,7 +24,7 @@ export default function Navbar() {
             alt="EPH Logo"
             className="h-10 w-15 rounded-lg object-cover"
           />
-          <span className="text-brand-gold font-semibold leading-tight">
+          <span className="text-brand-green-deep font-semibold leading-tight">
             <span className="block sm:hidden text-lg">EPH</span>
             <span className="hidden sm:block text-base">
               Ekenobizi
@@ -81,7 +81,7 @@ export default function Navbar() {
               )}
               <button
                 onClick={handleSignOut}
-                className="bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded transition-colors text-sm"
+                className="bg-gray-100 hover:bg-gray-200 text-brand-green-deep px-4 py-1.5 rounded transition-colors text-sm"
               >
                 Sign Out
               </button>
@@ -96,20 +96,20 @@ export default function Navbar() {
           aria-label="Toggle menu"
         >
           <span
-            className={`block h-0.5 w-6 bg-white transition-all ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
+            className={`block h-0.5 w-6 bg-brand-green-deep transition-all ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
           />
           <span
-            className={`block h-0.5 w-6 bg-white transition-all ${menuOpen ? "opacity-0" : ""}`}
+            className={`block h-0.5 w-6 bg-brand-green-deep transition-all ${menuOpen ? "opacity-0" : ""}`}
           />
           <span
-            className={`block h-0.5 w-6 bg-white transition-all ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+            className={`block h-0.5 w-6 bg-brand-green-deep transition-all ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}
           />
         </button>
       </div>
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-brand-green border-t border-white/10 px-4 py-4 flex flex-col gap-4 text-sm">
+        <div className="md:hidden bg-white border-t border-gray-200 px-4 py-4 flex flex-col gap-4 text-sm">
           <Link
             to="/"
             onClick={() => setMenuOpen(false)}

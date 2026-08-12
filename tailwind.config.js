@@ -13,6 +13,15 @@ export default {
           earth: "#7C4B1E",
         },
       },
+      keyframes: {
+        fadeInUp: {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        "fade-in-up": "fadeInUp 0.8s ease-out forwards",
+      },
     },
   },
   plugins: [],

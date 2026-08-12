@@ -11,6 +11,20 @@ import {
 } from "react-icons/fa";
 import SEO from "../components/SEO";
 import { useAuth } from "../context/AuthContext";
+import heroBg from "../assets/hero-bg.jpg";
+import ekenobiziVoiceLogo from "../assets/ekenobizi-voice.png";
+import sticobytesLogo from "../assets/sticobytes.png";
+import eycLogo from "../assets/eyc.jpeg";
+
+const trustedByLogos = [
+  {
+    name: "Ekenobizi Voice",
+    src: ekenobiziVoiceLogo,
+    url: "https://ekenobizi-voice.vercel.app/",
+  },
+  { name: "Sticobytes", src: sticobytesLogo, url: "https://sticobytes.com" },
+  { name: "Ekenobizi Youth Council", src: eycLogo, url: null },
+];
 
 const categories = [
   {
@@ -92,23 +106,43 @@ const Home = () => {
       />
 
       {/* ── HERO ── */}
-      <section className="bg-brand-green-deep text-white">
-        <div className="max-w-4xl mx-auto px-6 py-24 text-center">
-          <p className="text-brand-gold text-sm font-semibold tracking-widest uppercase mb-4">
+      <section className="relative text-white overflow-hidden">
+        {/* Background photo */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroBg})` }}
+        />
+        {/* Dark green overlay for text legibility */}
+        <div className="absolute inset-0 bg-brand-green-deep/80" />
+
+        <div className="relative max-w-4xl mx-auto px-6 py-28 md:py-36 text-center">
+          <p
+            className="text-brand-gold text-sm font-semibold tracking-widest uppercase mb-4 opacity-0 animate-fade-in-up"
+            style={{ animationDelay: "0.1s" }}
+          >
             Ekenobizi Community · Umuahia South LGA
           </p>
 
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+          <h1
+            className="text-4xl md:text-6xl font-bold leading-tight mb-6 opacity-0 animate-fade-in-up"
+            style={{ animationDelay: "0.25s" }}
+          >
             Find Property You Can Trust <br className="hidden md:block" />
             In Ekenobizi
           </h1>
 
-          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+          <p
+            className="text-gray-200 text-lg md:text-xl max-w-2xl mx-auto mb-10 opacity-0 animate-fade-in-up"
+            style={{ animationDelay: "0.4s" }}
+          >
             Every listing on this platform is human-reviewed and verified before
             it goes live. No scams. No surprises.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div
+            className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-in-up"
+            style={{ animationDelay: "0.55s" }}
+          >
             <Link
               to="/listings"
               className="bg-brand-gold text-white font-semibold px-8 py-3 rounded-lg hover:opacity-90 transition"
@@ -123,9 +157,49 @@ const Home = () => {
             </Link>
           </div>
 
-          <p className="mt-12 text-gray-400 text-sm tracking-wide">
+          <p
+            className="mt-12 text-gray-300 text-sm tracking-wide opacity-0 animate-fade-in-up"
+            style={{ animationDelay: "0.7s" }}
+          >
             Serving · Dikeukwu · Dikenta · Azumiri · Umuzam · Umunobiukwu
           </p>
+        </div>
+      </section>
+
+      {/* ── TRUSTED BY ── */}
+      <section className="bg-gray-50 py-14 px-6 border-b border-gray-100">
+        <div className="max-w-5xl mx-auto text-center">
+          <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-8">
+            Trusted By Voices in Ekenobizi
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
+            {trustedByLogos.map((logo) =>
+              logo.url ? (
+                <a
+                  key={logo.name}
+                  href={logo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={logo.name}
+                >
+                  <img
+                    src={logo.src}
+                    alt={logo.name}
+                    title={logo.name}
+                    className="h-12 md:h-14 w-auto object-contain grayscale hover:grayscale-0 transition duration-300"
+                  />
+                </a>
+              ) : (
+                <img
+                  key={logo.name}
+                  src={logo.src}
+                  alt={logo.name}
+                  title={logo.name}
+                  className="h-12 md:h-14 w-auto object-contain grayscale hover:grayscale-0 transition duration-300"
+                />
+              ),
+            )}
+          </div>
         </div>
       </section>
 
