@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, Link } from "react-router-dom";
 import StatsBar from "../admin/StatsBar";
 import { usePendingCount } from "../../hooks/usePendingCount";
 
@@ -29,6 +29,12 @@ function AdminLayout() {
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
       {/* Desktop sidebar */}
       <aside className="hidden md:flex md:flex-col md:w-64 md:shrink-0 bg-white border-r border-gray-200 p-4">
+        <Link
+          to="/"
+          className="mb-4 px-2 text-xl font-bold text-brand-green-deep hover:text-brand-gold transition-colors"
+        >
+          EPH
+        </Link>
         <h2 className="text-brand-gold font-bold text-lg mb-6 px-2">Admin</h2>
         <nav className="flex flex-col gap-1">
           {navItems.map((item) => (
@@ -51,6 +57,17 @@ function AdminLayout() {
           ))}
         </nav>
       </aside>
+
+      {/* Mobile top bar */}
+      <header className="md:hidden bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
+        <span className="text-brand-gold font-bold text-lg">Admin</span>
+        <Link
+          to="/"
+          className="text-lg font-bold text-brand-green-deep hover:text-brand-gold transition-colors"
+        >
+          EPH
+        </Link>
+      </header>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col pb-16 md:pb-0">

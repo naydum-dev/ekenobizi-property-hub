@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const navItems = [
@@ -85,6 +85,13 @@ export default function OwnerLayout() {
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
       {/* Desktop sidebar */}
       <aside className="hidden md:flex md:flex-col md:w-64 bg-white border-r border-gray-200 px-4 py-6">
+        <Link
+          to="/"
+          className="mb-6 px-2 text-xl font-bold text-brand-green-deep hover:text-brand-gold transition-colors"
+        >
+          EPH
+        </Link>
+
         <div className="mb-8 px-2">
           <p className="text-sm text-gray-500">Welcome back,</p>
           <p className="text-lg font-bold text-brand-green-deep truncate">
@@ -132,9 +139,17 @@ export default function OwnerLayout() {
       </aside>
 
       {/* Mobile top bar */}
-      <header className="md:hidden bg-white border-b border-gray-200 px-4 py-4">
-        <p className="text-sm text-gray-500">Welcome back,</p>
-        <p className="text-lg font-bold text-brand-green-deep">{firstName}</p>
+      <header className="md:hidden bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
+        <div>
+          <p className="text-sm text-gray-500">Welcome back,</p>
+          <p className="text-lg font-bold text-brand-green-deep">{firstName}</p>
+        </div>
+        <Link
+          to="/"
+          className="text-lg font-bold text-brand-green-deep hover:text-brand-gold transition-colors"
+        >
+          EPH
+        </Link>
       </header>
 
       {/* Page content */}
