@@ -74,6 +74,14 @@ function Login() {
             onChange={handleChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-gold"
           />
+          <div className="text-right">
+            <Link
+              to="/forgot-password"
+              className="text-brand-gold text-sm hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
 
           {error && (
             <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">

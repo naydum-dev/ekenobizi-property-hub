@@ -10,6 +10,8 @@ import PageLoader from "./components/ui/PageLoader";
 // Lazy-loaded pages — each becomes its own chunk, only fetched when visited
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Home = lazy(() => import("./pages/Home"));
 const Listings = lazy(() => import("./pages/Listings"));
 const ListingDetail = lazy(() => import("./pages/ListingDetail"));
@@ -35,6 +37,8 @@ export default function App() {
           {/* Public auth pages — no Navbar/Footer */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Owner dashboard — its own shell, no public Navbar/Footer */}
           <Route
