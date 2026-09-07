@@ -15,25 +15,40 @@ function ResetPassword() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    // Supabase's recovery link logs the user in and fires this event —
-    // there's no token to parse manually. Until this fires, we don't
-    // know whether the visitor arrived via a valid link.
+    let cancelled = false;
+
+    // The Supabase client parses and consumes the recovery link's URL
+    // hash at init time — before this component mounts — so the
+    // PASSWORD_RECOVERY event usually fires and is gone before we can
+    // listen for it. By the time we render, though, the session it
+    // created is already available via getSession(), so check that
+    // first as the primary signal.
+    supabase.auth.getSession().then(({ data }) => {
+      if (cancelled) return;
+      if (data.session) {
+        setReady(true);
+      }
+    });
+
+    // Fallback: in case the hash is still being processed when this
+    // component mounts (slower devices/networks), also listen live.
     const { data: listener } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setReady(true);
       }
     });
 
-    // If the event hasn't fired shortly after mount, the link was
-    // invalid, expired, or the page was opened directly.
+    // If neither check finds a session shortly after mount, the link
+    // was invalid, expired, already used, or the page was opened directly.
     const timeout = setTimeout(() => {
       setReady((currentReady) => {
         if (!currentReady) setExpired(true);
         return currentReady;
       });
-    }, 4000);
+    }, 3000);
 
     return () => {
+      cancelled = true;
       listener.subscription.unsubscribe();
       clearTimeout(timeout);
     };
