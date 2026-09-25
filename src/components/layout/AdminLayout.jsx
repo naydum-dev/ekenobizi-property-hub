@@ -5,6 +5,7 @@ import { usePendingCount } from "../../hooks/usePendingCount";
 const navItems = [
   { to: "/admin", label: "Review Queue", end: true, showBadge: true },
   { to: "/admin/listings", label: "All Listings" },
+  { to: "/admin/agents", label: "Agents" },
   { to: "/admin/owners", label: "Owners" },
   { to: "/admin/activity", label: "Activity" },
   { to: "/admin/settings", label: "Settings" },

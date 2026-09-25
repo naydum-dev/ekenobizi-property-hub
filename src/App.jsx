@@ -19,11 +19,13 @@ const MyListings = lazy(() => import("./pages/owner/MyListings"));
 const SubmitListing = lazy(() => import("./pages/owner/SubmitListing"));
 const EditListing = lazy(() => import("./pages/owner/EditListing"));
 const OwnerProfile = lazy(() => import("./pages/owner/OwnerProfile"));
+const BecomeAgent = lazy(() => import("./pages/owner/BecomeAgent"));
 const ReviewQueue = lazy(() => import("./pages/ReviewQueue"));
 const AllListings = lazy(() => import("./pages/admin/AllListings"));
 const ListingDetailAdmin = lazy(
   () => import("./pages/admin/ListingDetailAdmin"),
 );
+const AdminAgents = lazy(() => import("./pages/admin/AdminAgents"));
 const Owners = lazy(() => import("./pages/admin/Owners"));
 const Settings = lazy(() => import("./pages/admin/Settings"));
 const ActivityLog = lazy(() => import("./pages/admin/ActivityLog"));
@@ -53,6 +55,7 @@ export default function App() {
             <Route path="submit" element={<SubmitListing />} />
             <Route path="edit/:id" element={<EditListing />} />
             <Route path="profile" element={<OwnerProfile />} />
+            <Route path="become-agent" element={<BecomeAgent />} />
           </Route>
 
           {/* Admin dashboard — its own shell, no public Navbar/Footer */}
@@ -67,6 +70,7 @@ export default function App() {
             <Route index element={<ReviewQueue />} />
             <Route path="listings" element={<AllListings />} />
             <Route path="listings/:id" element={<ListingDetailAdmin />} />
+            <Route path="agents" element={<AdminAgents />} />
             <Route path="owners" element={<Owners />} />
             <Route path="activity" element={<ActivityLog />} />
             <Route path="settings" element={<Settings />} />
