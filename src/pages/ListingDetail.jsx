@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { attachAgentInfo } from "../lib/agents";
 import VerifiedBadge from "../components/ui/VerifiedBadge";
+import AgentBadge from "../components/ui/AgentBadge";
 import ListingDetailSkeleton from "./ListingDetailSkeleton";
 import SEO from "../components/SEO";
 
@@ -48,7 +50,9 @@ export default function ListingDetail() {
       if (error) {
         setError("Property not found.");
       } else {
-        setProperty(data);
+        // Attach agent_business_name (null if the owner isn't an approved agent)
+        const [propertyWithAgent] = await attachAgentInfo([data]);
+        setProperty(propertyWithAgent);
         const primary = data.property_images?.find((img) => img.is_primary);
         const first = data.property_images?.[0];
         setSelectedImage(primary || first || null);
@@ -157,6 +161,7 @@ export default function ListingDetail() {
               {formatCategory(property.category)}
             </span>
             {property.is_verified && <VerifiedBadge size="sm" />}
+            <AgentBadge businessName={property.agent_business_name} />
           </div>
 
           {/* Title */}

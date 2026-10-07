@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../lib/supabase";
+import { attachAgentInfo } from "../lib/agents";
 import PropertyCard from "../components/listings/PropertyCard";
 import PropertyCardSkeleton from "../components/ui/PropertyCardSkeleton";
 import ListingsFilter from "../components/listings/ListingsFilter";
@@ -61,7 +62,9 @@ export default function Listings() {
     if (error) {
       setError("Failed to load listings. Please try again.");
     } else {
-      setProperties(data);
+      // Attach agent_business_name (null if the owner isn't an approved agent)
+      const propertiesWithAgents = await attachAgentInfo(data);
+      setProperties(propertiesWithAgents);
     }
 
     setLoading(false);

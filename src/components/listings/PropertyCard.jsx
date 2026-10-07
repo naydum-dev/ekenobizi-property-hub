@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import VerifiedBadge from "../ui/VerifiedBadge";
+import AgentBadge from "../ui/AgentBadge";
 
 const CATEGORY_LABELS = {
   land_for_sale: "Land for Sale",
@@ -18,6 +19,7 @@ export default function PropertyCard({ property }) {
     villages,
     property_images,
     is_verified,
+    agent_business_name,
   } = property;
 
   const primaryImage =
@@ -47,12 +49,13 @@ export default function PropertyCard({ property }) {
 
       {/* Content */}
       <div className="p-4 space-y-2">
-        {/* Category + Verified badge */}
+        {/* Category + Verified badge + Agent badge */}
         <div className="flex items-center gap-2 flex-wrap">
           <span className="inline-block text-xs font-semibold text-brand-gold uppercase tracking-wide">
             {categoryLabel}
           </span>
           {is_verified && <VerifiedBadge size="sm" />}
+          <AgentBadge businessName={agent_business_name} size="sm" />
         </div>
 
         {/* Title */}
